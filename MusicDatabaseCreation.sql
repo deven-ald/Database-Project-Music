@@ -85,7 +85,8 @@ create table SONG_ARTIST (
     constraint song_artist_songartistid_pk primary key(SongID, ArtistID),
     -- constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID),
     constraint song_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
-)
+);
+go
 
 
 -- select *
