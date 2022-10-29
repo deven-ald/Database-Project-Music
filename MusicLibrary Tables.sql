@@ -8,8 +8,19 @@ go
 --Switches from master to MusicLibrary
 use MusicLibrary;
 go
---Creates the Album Table
 --START OF DOMAIN TABLES
+
+--Creates the Label Table
+
+CREATE TABLE LABEL(
+	LabelID     INT,
+	LabelName   CHAR(20),
+	DateFounded Date,
+	constraint LABEL_LabelID_pk primary key(LabelID) 
+)
+
+--Creates the Album Table
+
 CREATE TABLE ALBUM
 (
 	AlbumID     INT      not null,
@@ -19,9 +30,9 @@ CREATE TABLE ALBUM
 	ReleaseDate Date     not null,
 	LabelID     INT      not null,
 	constraint Album_AlbumID_pk primary key (AlbumID),
-	/*Commenting this out because Label doesn't exist in this yet
-	constraint Label_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
-	*/
+	
+	constraint Label_LabelID_fk foreign key(LabelID) references LABEL(LabelID),
+	
 	constraint Album_Greater_zero check(AlbumLength > 0)
 	-- ^^Makes sure that the albumlength attribute is greater than zero
 )
@@ -36,8 +47,8 @@ CREATE TABLE SONG(
 	LabelID     INT      not null,
 	constraint Song_Length_zero check(Length > 0),
 	constraint Song_BPM_zero check(BPM > 0),
-	constraint Song_SongID_pk primary key(SongID)
-	--constraint Song_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
+	constraint Song_SongID_pk primary key(SongID),
+	constraint Song_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
 )
 --Creates the Genre table
 CREATE TABLE GENRE(
@@ -64,4 +75,3 @@ CREATE TABLE SONG_ALBUM(
 	constraint SONG_ALBUM_SongID_fk foreign key (SongID) references SONG(SongID),
 	constraint SONG_ALBUMAlbumID_fk foreign key (AlbumID) references ALBUM(AlbumID)
 )
-	
