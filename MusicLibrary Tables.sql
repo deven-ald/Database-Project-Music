@@ -118,7 +118,7 @@ create table SONG_BAND (
     BandID int,
 
     constraint song_band_songbandid_pk primary key(SongID, BandID),
-    -- constraint song_band_songid_fk foreign key(SongID) references SONG(SongID),
+    constraint song_band_songid_fk foreign key(SongID) references SONG(SongID),
     constraint song_band_bandid_fk foreign key(BandID) references BAND(BandID)
 );
 go
@@ -128,7 +128,7 @@ create table SONG_ARTIST (
     ArtistID int,
 
     constraint song_artist_songartistid_pk primary key(SongID, ArtistID),
-    -- constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID),
+    constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID),
     constraint song_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
 );
 go
