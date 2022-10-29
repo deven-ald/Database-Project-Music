@@ -1,3 +1,18 @@
+-- Author: Robert Kern and Devendra Ranjan
+-- Date: 10/28/2022
+-- Desc: Contains the create statements for the Label, Band, and Artist domain tables
+--       and the band_artist, song_band, and song_artist linking tables. 
+-- after these were created they were added to the other part of the tables, that adds Album, Song, Genre, Song_Genre, and Song_album. 
+
+
+-- ****** NOTES ******
+
+-- foreign key constraints that link to tables not in my half were left
+-- commented out for now.
+
+-- select statements for testing purposes are at the bottom.
+
+-- primary key identity() numbers can be adjusted to fit with the other half.
 use master;
 go
 --Creates and Names the database
@@ -18,7 +33,7 @@ CREATE TABLE LABEL(
 	DateFounded Date,
 	constraint LABEL_LabelID_pk primary key(LabelID) 
 )
-
+go
 --Creates the Album Table
 
 CREATE TABLE ALBUM
@@ -36,6 +51,7 @@ CREATE TABLE ALBUM
 	constraint Album_Greater_zero check(AlbumLength > 0)
 	-- ^^Makes sure that the albumlength attribute is greater than zero
 )
+go
 --Creates Table song
 CREATE TABLE SONG(
 	SongID      INT      not null,
@@ -50,6 +66,7 @@ CREATE TABLE SONG(
 	constraint Song_SongID_pk primary key(SongID),
 	constraint Song_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
 )
+go
 --Creates the Genre table
 CREATE TABLE GENRE(
 	GenreID          INT,
@@ -59,6 +76,7 @@ CREATE TABLE GENRE(
 	--Sets the primary key for genre
 	constraint Genre_GenreID_pk primary key (GenreID)
 )
+go
 --Creates a linking table between SONG and GENRE
 -- START OF LINKING TABLES
 CREATE TABLE SONG_GENRE(
@@ -68,6 +86,7 @@ CREATE TABLE SONG_GENRE(
 	constraint SONG_GENRE_SongID_fk foreign key (SongID) references SONG(SongID),
 	constraint SONG_GENRE_GenreID_fk foreign key (GenreID) references GENRE(GenreID)
 	)
+	go
 CREATE TABLE SONG_ALBUM(
 	SongID  INT,
 	AlbumID INT,
@@ -75,6 +94,7 @@ CREATE TABLE SONG_ALBUM(
 	constraint SONG_ALBUM_SongID_fk foreign key (SongID) references SONG(SongID),
 	constraint SONG_ALBUMAlbumID_fk foreign key (AlbumID) references ALBUM(AlbumID)
 )
+go
 --The Following Code was created by Robert
 create table BAND (
     BandID int identity(2000,1),
