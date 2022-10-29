@@ -46,7 +46,9 @@ CREATE TABLE ALBUM
 	LabelID     INT      not null,
 	constraint Album_AlbumID_pk primary key (AlbumID),
 	
-	constraint Label_LabelID_fk foreign key(LabelID) references LABEL(LabelID),
+	constraint Label_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
+	on update cascade 
+	on delete no action,
 	
 	constraint Album_Greater_zero check(AlbumLength > 0)
 	-- ^^Makes sure that the albumlength attribute is greater than zero
@@ -65,6 +67,8 @@ CREATE TABLE SONG(
 	constraint Song_BPM_zero check(BPM > 0),
 	constraint Song_SongID_pk primary key(SongID),
 	constraint Song_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
+
+
 )
 go
 --Creates the Genre table
@@ -83,16 +87,24 @@ CREATE TABLE SONG_GENRE(
 	GenreID INT,
 	SongID INT,
 	constraint SONG_GENRE_Song_Genre_pk primary key(SongID, GenreID),
-	constraint SONG_GENRE_SongID_fk foreign key (SongID) references SONG(SongID),
+	constraint SONG_GENRE_SongID_fk foreign key (SongID) references SONG(SongID)
+	on update cascade 
+	on delete no action,
 	constraint SONG_GENRE_GenreID_fk foreign key (GenreID) references GENRE(GenreID)
+	on update cascade 
+	on delete no action
 	)
 	go
 CREATE TABLE SONG_ALBUM(
 	SongID  INT,
 	AlbumID INT,
 	constraint SONG_ALBUM_Song_Album_pk primary key(SongID, AlbumID),
-	constraint SONG_ALBUM_SongID_fk foreign key (SongID) references SONG(SongID),
+	constraint SONG_ALBUM_SongID_fk foreign key (SongID) references SONG(SongID)
+	on update cascade 
+	on delete no action,
 	constraint SONG_ALBUMAlbumID_fk foreign key (AlbumID) references ALBUM(AlbumID)
+	on update cascade 
+	on delete no action
 )
 go
 --The Following Code was created by Robert
@@ -105,7 +117,9 @@ create table BAND (
     LabelID int not null,
 
     constraint band_bandid_pk primary key(BandID),
-    constraint band_labelid_fk foreign key(LabelID) references LABEL(LabelID),
+    constraint band_labelid_fk foreign key(LabelID) references LABEL(LabelID)
+	on update cascade 
+	on delete no action,
     constraint band_membersnum_ck check (MembersNum > 0)
 );
 go 
@@ -118,6 +132,8 @@ create table ARTIST (
 
     constraint artist_artistid_pk primary key(ArtistID),
     constraint artist_labelid_fk foreign key(LabelID) references LABEL(LabelID)
+	on update cascade 
+	on delete no action
 );
 go
 
@@ -128,8 +144,13 @@ create table BAND_ARTIST (
     DateLeft date,
     
     constraint band_artist_bandartistid_pk primary key(BandID, ArtistID),
-    constraint band_artist_bandid_fk foreign key(BandID) references BAND(BandID),
+    constraint band_artist_bandid_fk foreign key(BandID) references BAND(BandID)
+	on delete no action
+	 
+	,
     constraint band_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
+	on update cascade 
+	on delete no action
 );
 go
 
@@ -138,8 +159,12 @@ create table SONG_BAND (
     BandID int,
 
     constraint song_band_songbandid_pk primary key(SongID, BandID),
-    constraint song_band_songid_fk foreign key(SongID) references SONG(SongID),
+    constraint song_band_songid_fk foreign key(SongID) references SONG(SongID)
+	on update cascade 
+	on delete no action,
     constraint song_band_bandid_fk foreign key(BandID) references BAND(BandID)
+	on update cascade 
+	on delete no action
 );
 go
 
@@ -148,7 +173,10 @@ create table SONG_ARTIST (
     ArtistID int,
 
     constraint song_artist_songartistid_pk primary key(SongID, ArtistID),
-    constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID),
+    constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID) on update cascade on delete no action,
     constraint song_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
+	on update cascade 
+	on delete no action
 );
 go
+
