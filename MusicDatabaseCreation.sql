@@ -137,7 +137,6 @@ CREATE TABLE SONG_ALBUM(
 	AlbumID INT,
 	constraint SONG_ALBUM_Song_Album_pk primary key(SongID, AlbumID),
 	constraint SONG_ALBUM_SongID_fk foreign key (SongID) references SONG(SongID)
-	on update no action
 	on delete no action
 	,
 	constraint SONG_ALBUM_AlbumID_fk foreign key (AlbumID) references ALBUM(AlbumID)
@@ -155,7 +154,6 @@ create table BAND_ARTIST (
     
     constraint band_artist_bandartistid_pk primary key(BandID, ArtistID),
     constraint band_artist_bandid_fk foreign key(BandID) references BAND(BandID)
-    	on update no action
 	on delete no action
 	,
     constraint band_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
@@ -170,7 +168,6 @@ create table SONG_BAND (
 
     constraint song_band_songbandid_pk primary key(SongID, BandID),
     constraint song_band_songid_fk foreign key(SongID) references SONG(SongID)
-	on update no action 
 	on delete no action
 	,
     constraint song_band_bandid_fk foreign key(BandID) references BAND(BandID)
@@ -187,10 +184,9 @@ create table SONG_ARTIST (
     constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID) 
         on update cascade 
         on delete no action
-		,
+	,
     constraint song_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
-	    on update no action
-	    on delete no action
+	on delete no action
 );
 go
 -- ###### END OF LINKING TABLES ######
