@@ -155,7 +155,7 @@ create table BAND_ARTIST (
     
     constraint band_artist_bandartistid_pk primary key(BandID, ArtistID),
     constraint band_artist_bandid_fk foreign key(BandID) references BAND(BandID)
-    on update no action
+    	on update no action
 	on delete no action
 	,
     constraint band_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
