@@ -1,0 +1,764 @@
+-- Author: Robert Kern, Devendra Ranjan, Jenna Joseph, Theresa Khouri
+-- Date: 10/29/2022
+-- Desc: Contains the create statements for the MusicLibrary Database 
+--		 Including the domain tables: 	Label, Band, Artist, Album, Song, and Genre
+--		 and the linking tables: 		Song_Band, Song_Artist, Song_Genre, Song_Album, and Band_Artist
+ 
+
+use master;
+go
+--Creates and Names the database
+drop database MusicLibrary;
+go
+create database MusicLibrary;
+go
+--Switches from master to MusicLibrary
+use MusicLibrary;
+go
+
+
+-- ###### START OF DOMAIN TABLES ######
+
+--  Devendra's Code:
+
+--Creates the Label Table
+CREATE TABLE LABEL(
+	LabelID     INT identity(1000, 1),
+	LabelName   CHAR(40),
+	DateFounded Date,
+	constraint LABEL_LabelID_pk primary key(LabelID) 
+);
+go
+
+-- Changed LabelName from CHAR(20) to CHAR(40) (Jenna 11/9/2022)
+
+--Creates the Album Table
+CREATE TABLE ALBUM
+(
+	AlbumID     INT      identity(2000, 1),
+	AlbumLength SMALLINT not null,
+	AlbumName   CHAR(35) not null,
+	NumTracks   TINYINT  not null,
+	ReleaseDate Date     not null,
+	LabelID     INT      not null,
+	constraint Album_AlbumID_pk primary key (AlbumID),
+
+	constraint Label_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
+	on update cascade 
+	on delete no action,
+	
+	constraint Album_Greater_zero check(AlbumLength > 0)
+	-- ^^Makes sure that the albumlength attribute is greater than zero
+);
+go
+
+-- Changed AlbumName from CHAR(20) to CHAR(35) (Jenna 11/9/2022)
+
+--Creates Table song
+CREATE TABLE SONG(
+	SongID      INT      identity(3000, 1),
+	ReleaseDate DATE     not null,
+	SongTitle       CHAR(35) not null,
+	SongLength      SMALLINT not null,
+	BPM         SMALLINT,
+	SongKey     CHAR(15),
+	LabelID     INT      not null,
+	constraint Song_Length_zero check(SongLength > 0),
+	constraint Song_BPM_zero check(BPM > 0),
+	constraint Song_SongID_pk primary key(SongID),
+	constraint Song_LabelID_fk foreign key(LabelID) references LABEL(LabelID)
+        on update cascade
+        on delete no action
+
+);
+go
+
+-- Should the song table be linked with the album table? (Jenna 11/9/2022)
+-- Changed Title and Length to SongTitle and SongLength for clarity (Jenna 11/9/2022)
+-- Changed SongKey from Char(3) to Char(15) (Jenna 11/9/2022)
+-- Changed SongTitle from Char(15) to Char(35) (Jenna 11/9/2022)
+
+--Creates the Genre table
+CREATE TABLE GENRE(
+	GenreID          INT 		 identity(4000, 1),
+	GenreName        CHAR(15)    not null,
+	GenreDescription VARCHAR(50) not null,	
+	GenreRegionOrg   VARCHAR(20) not null,
+	--Sets the primary key for genre
+	constraint Genre_GenreID_pk primary key (GenreID)
+);
+go
+
+--  Robert's Code:
+
+create table BAND (
+    BandID int identity(5000,1),
+    BandName char(20) not null,
+    MembersNum tinyint not null,
+    DateFormed date not null,
+    DateDisbanded date,
+    LabelID int not null,
+
+    constraint band_bandid_pk primary key(BandID),
+    constraint band_labelid_fk foreign key(LabelID) references LABEL(LabelID)
+	on update cascade 
+	on delete no action,
+    constraint band_membersnum_ck check (MembersNum > 0)
+);
+go 
+
+create table ARTIST (
+    ArtistID int identity(6000, 1),
+    ArtistName char(20) not null,
+    ArtistRegion char(20),
+    LabelID int not null,
+
+    constraint artist_artistid_pk primary key(ArtistID),
+    constraint artist_labelid_fk foreign key(LabelID) references LABEL(LabelID)
+	on update cascade 
+	on delete no action
+);
+go
+-- ###### END OF DOMAIN TABLES ######
+
+
+-- ###### START OF LINKING TABLES ######
+
+--  Devendra's Code:
+
+--Creates a linking table between SONG and GENRE
+CREATE TABLE SONG_GENRE(
+	GenreID INT,
+	SongID INT,
+	constraint SONG_GENRE_Song_Genre_pk primary key(SongID, GenreID),
+	constraint SONG_GENRE_SongID_fk foreign key (SongID) references SONG(SongID)
+	on update cascade 
+	on delete no action
+	,
+	constraint SONG_GENRE_GenreID_fk foreign key (GenreID) references GENRE(GenreID)
+	on update cascade
+	on delete no action
+);
+go
+
+CREATE TABLE SONG_ALBUM(
+	SongID  INT,
+	AlbumID INT,
+	constraint SONG_ALBUM_Song_Album_pk primary key(SongID, AlbumID),
+	constraint SONG_ALBUM_SongID_fk foreign key (SongID) references SONG(SongID)
+	on delete no action
+	,
+	constraint SONG_ALBUM_AlbumID_fk foreign key (AlbumID) references ALBUM(AlbumID)
+	on update cascade 
+	on delete no action
+);
+go
+
+--  Robert's Code:
+create table BAND_ARTIST (
+    BandID int,
+    ArtistID int,
+    DateJoined date not null,
+    DateLeft date,
+    
+    constraint band_artist_bandartistid_pk primary key(BandID, ArtistID),
+    constraint band_artist_bandid_fk foreign key(BandID) references BAND(BandID)
+	on delete no action
+	,
+    constraint band_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
+	on update cascade 
+	on delete no action
+);
+go
+
+create table SONG_BAND (
+    SongID int,
+    BandID int,
+
+    constraint song_band_songbandid_pk primary key(SongID, BandID),
+    constraint song_band_songid_fk foreign key(SongID) references SONG(SongID)
+	on delete no action
+	,
+    constraint song_band_bandid_fk foreign key(BandID) references BAND(BandID)
+	on update cascade 
+	on delete no action
+);
+go
+
+create table SONG_ARTIST (
+    SongID int,
+    ArtistID int,
+
+    constraint song_artist_songartistid_pk primary key(SongID, ArtistID),
+    constraint song_artist_songid_fk foreign key(SongID) references SONG(SongID) 
+        on update cascade 
+        on delete no action
+	,
+    constraint song_artist_artistid_fk foreign key(ArtistID) references ARTIST(ArtistID)
+	on delete no action
+);
+go
+-- ###### END OF LINKING TABLES ######
+
+-- Author: Jenna Joseph and Theresa Khouri
+-- Date: 11/9/2022
+-- Desc: Contains the insert statements for the MusicLibrary Database 
+
+-- ###### START OF DATA INSERTION ######
+-- Start of Jenna's code
+
+use MusicLibrary;
+go
+INSERT INTO label (
+	LabelName,
+	DateFounded)
+VALUES
+	('Homewood Records',
+	'1976'),
+	('Plopscotch Records',
+	'2014'),
+	('Reprise',
+	'1960'),
+	('On and On Records',
+	'2001'),
+	('Mute Records',
+	'1978'),
+	('Moon Records',
+	'1982'),
+	('Warner Home Video',
+	'1978'),
+	('Nonesuch Records',
+	'1964'),
+	('V2 Records',
+	'1996'),
+	('Sire',
+	'1966'),
+	('Nice Life',
+	'2016'),
+	('Atlantic Records',
+	'1947'),
+	('A&M',
+	'1962'),
+	('Interscope',
+	'1990'),
+	('Rhino',
+	'1978'),
+	('Columbia Records',
+	'1889'),
+	('Capitol Studios',
+	'1956'),
+	('Atlantic Records UK',
+	'2004'),
+	('Young Money Entertainment',
+	'2016'),
+	('Warner Records',
+	'1958'),
+	('Lisn Music',
+	'2009'),
+	('Arista Nashville',
+	'1989'),
+	('TuneCore',
+	'2005'),
+	('Griselda Records',
+	'2012'),
+	('EMPIRE',
+	NULL),
+	('Universal Music Group',
+	'1934-09-01'),
+	('Motown',
+	'1959-01-12'),
+	('Boyz Entertainment LLC',
+	NULL),
+	('Money is not Everything Entertainment',
+	NULL),
+	('RCA Records',
+	'1900-01-09'),
+	('Roadrunner Records',
+	'1980'),
+	('Ruthless Records',
+	'1986'),
+	('Sony Music Entertainment',
+	'1929-09-09'),
+	('Dreamville Records',
+	'2007'),
+	('Lost Kids LLC',
+	NULL),
+	('Stones Throw Records',
+	'1996'),
+	('Kedar Entertainment Group',
+	'1995'),
+	('LaFace Records',
+	'1989'),
+	('Fueled by Ramen LLC',
+	'1996'),
+	('Def Jam Recordings',
+	'1982')
+	;
+go
+
+-- I'm listing length of songs and albums in seconds for now (Jenna 11/9/2022)
+INSERT INTO album (
+	AlbumLength,
+	AlbumName,
+	NumTracks,
+	ReleaseDate,
+	LabelID)
+VALUES
+	(1855,
+	'Mother Earth''s Plantasia',
+	10,
+	'1976',
+	1000),
+	(521,
+	'Baby Hotline/Tea Errors',
+	2,
+	'2019-03-21',
+	1001),
+	(2172,
+	'Sundown',
+	10,
+	'1974-01-01',
+	1002),
+	(3645,
+	'Tetra',
+	14,
+	'2012-09-03',
+	1003),
+	(2644,
+	'Music for the Masses',
+	14,
+	'1987-09-28',
+	1004),
+	(2534,
+	'Variety',
+	11,
+	'1984-04-25',
+	1005),
+	(521,
+	'BLOODY STREAM',
+	2,
+	'2013-01-30',
+	1006),
+	(2483,
+	'Attack & Release',
+	12,
+	'2008-04-01',
+	/*1007 and */1008),
+-- Any possible way to include two foreign keys on one entry? What to do about records with multiple labels... (Jenna 11/9/2022)
+	(2318,
+	'Little Creatures',
+	9,
+	'1985-06-10',
+	1009),
+	(1998,
+	'Cuz I Love You',
+	11,
+	'2019-04-19',
+	/*1010 and */1011),
+	(4200,
+	'Superunknown',
+	15,
+	'1994-03-08',
+	1012),
+	(3900,
+	'Audioslave',
+	14,
+	'2002-11-18',
+	1013),
+	(261,
+	'The Promise',
+	1,
+	'2017-03-10',
+	1022),
+	(2823,
+	'Purple',
+	11,
+	'1994-06-07',
+	1011),
+	(2310,
+	'Time Out',
+	7,
+	'1959-12-14',
+	1015),
+	(139,
+	'Act Naturally',
+	1,
+	'1963-03-11',
+	1016),
+	(2797,
+	'Fine Line',
+	12,
+	'2019-12-13',
+	1015),
+	(2760,
+	'Divide',
+	12,
+	'2017-03-03',
+	1011),
+	(4874,
+	'Views',
+	20,
+	'2016-04-29',
+	1018),
+	(3107,
+	'Who Hurt You?',
+	17,
+	'2022-08-12',
+	1019),
+	(3300,
+	'Blown Away',
+	14,
+	'2012-05-01',
+	1021),
+	(2982,
+	'10',
+	12,
+	'2022-10-28',
+	1023),
+	(3161,
+	'Call Me If You Get Lost',
+	16,
+	'2021-07-25',
+	1015),
+	(1440,
+	'On & On',
+	5,
+	'1997',
+	1036),
+	(2104,
+	'What''s Going On',
+	9,
+	'1971-05-21',
+	1026),
+	(2336,
+	'Come Get It!',
+	8,
+	'1978-04-20',
+	1026),
+	(939,
+	'Testers',
+	7,
+	'2019-04-09',
+	1027),
+	(3287,
+	'Flawless Like Me',
+	24,
+	'2022-09-23',
+	1024),
+	(1227,
+	'2 Faced',
+	8,
+	'2019-10-17',
+	1028),
+	(4387,
+	'Stankonia',
+	24,
+	'2000-10-30',
+	1037),
+	(2333,
+	'Riot!',
+	11,
+	'2007-06-12',
+	1038),
+	(3612,
+	'Vol. 3: (The Subliminal Verses)',
+	14,
+	'2004-05-25',
+	1030),
+	(2907,
+	'Straight Outta Compton',
+	10,
+	'1988-08-08',
+	1031),
+	(3780,
+	'The OF Tape Vol. 2',
+	18,
+	'2012-03-20',
+	1032),
+	(3323,
+	'Mirrorland',
+	14,
+	'2019-09-06',
+	1033),
+	(2026,
+	'Remember My Name',
+	10,
+	'2015-06-02',
+	1039),
+	(3604,
+	'The Forever Story',
+	15,
+	'2022-08-26',
+	1033),
+	(4680,
+	'Wasteland',
+	19,
+	'2022-07-08',
+	1034),
+	(4680,
+	'To Pimp A Butterfly',
+	16,
+	'2015-03-16',
+	1013),
+	(1977,
+	'Yessir Whatever',
+	12,
+	'2013-06-18',
+	1035)
+	;
+go
+
+
+INSERT INTO song (
+	ReleaseDate,
+	SongTitle,
+	SongLength,
+	BPM,
+	SongKey,
+	LabelID)
+VALUES
+	('1976-01-01',
+	'Plantasia',
+	201,
+	175,
+	'A-flat major',
+	1000),
+	('2019-03-21',
+	'Baby Hotline',
+	290,
+	120,
+	'C major',
+	1001),
+	('1974-01-01',
+	'Carefree Highway',
+	225,
+	85,
+	'E major',
+	1002),
+	('2012-09-28',
+	'Down The Road',
+	207,
+	111,
+	'D minor',
+	1003),
+	('1987-09-28',
+	'Behind The Wheel',
+	318,
+	125,
+	'D minor',
+	1004),
+	('1984-04-25',
+	'Plastic Love',
+	291,
+	103,
+	'D minor',
+	1005),
+	('2013-01-30',
+	'BLOODY STREAM',
+	261,
+	130,
+	'A-flat major',
+	1006),
+	('2008-04-01',
+	'Psychotic Girl',
+	251,
+	81,
+	'D minor',
+	1008),
+	('1985-06-10',
+	'Road to Nowhere',
+	259,
+	110,
+	'D major',
+	1009),
+	('2019-04-19',
+	'Juice',
+	195,
+	120,
+	'G major',
+	1011),
+	('1994-03-08',
+	'Spoonman',
+	247,
+	93,
+	'G major',
+	1012),
+	('2002-11-18',
+	'I am the Highway',
+	335,
+	175,
+	'A minor',
+	1013),
+	('2017-03-10',
+	'The Promise',
+	261,
+	146,
+	'F minor',
+	1022),
+	('1994-06-07',
+	'Big Empty',
+	294,
+	122,
+	'C major',
+	1011),
+	('1959-12-14',
+	'Take Five',
+	324,
+	174,
+	'A-flat minor',
+	1015),
+	('1963-03-11',
+	'Act Naturally',
+	139,
+	92,
+	'G major',
+	1016),
+	('2019-12-13',
+	'Adore You',
+	207,
+	99,
+	'A-flat major',
+	1015),
+	('2017-03-03',
+	'Perfect',
+	263,
+	95,
+	'A-flat major',
+	1011),
+	('2016-04-29',
+	'One Dance',
+	173,
+	104,
+	'C-sharp major',
+	1018),
+	('2022-08-12',
+	'It''s You',
+	212,
+	96,
+	'B minor',
+	1019),
+	('2012-05-01',
+	'Blown Away',
+	240,
+	137,
+	'A minor',
+	1021),
+	('2022-10-28',
+	'FlyGod Jr. (feat. DJ Drama)',
+	202,
+	140,
+	'G minor',
+	1023),
+	('2021-07-25',
+	'Lemonhead (feat. 42 Dugg)',
+	130,
+	137,
+	'C-sharp major',
+	1015),
+	('1997',
+	'On & On',
+	226,
+	80,
+	'B minor',
+	1025),
+	('1971-05-21',
+	'What''s Happening Brother',
+	204,
+	98,
+	'F minor',
+	1026),
+	('1978-04-20',
+	'Mary Jane',
+	297,
+	94,
+	'B minor',
+	1026),
+	('2019-04-09',
+	'Ghetto Boy Intro',
+	160,
+	97,
+	'F-sharp minor',
+	1027),
+	('2022-09-23',
+	'White House (feat. Babyface Ray)',
+	108,
+	137,
+	'D major',
+	1024),
+	('2022-09-23',
+	'Legendary',
+	161,
+	131,
+	'B major',
+	1028),
+	('2000-10-30',
+	'B.O.B. - Bombs Over Baghdad',
+	304,
+	154,
+	'A major',
+	1037),
+	('2007-06-12',
+	'Misery Business',
+	211,
+	173,
+	'C-sharp major',
+	1038),
+	('2004-05-25',
+	'Vermilion',
+	316,
+	168,
+	'B minor',
+	1030),
+	('1988-08-08',
+	'Straight Outta Compton',
+	258,
+	103,
+	'A-flat major',
+	1031),
+	('2012-03-20',
+	'Ya Know (feat. The Internet)',
+	240,
+	110,
+	'G minor',
+	1032),
+	('2019-09-06',
+	'LaLa Challenge',
+	231,
+	140,
+	'B minor',
+	1033),
+	('2015-06-02',
+	'Why Me',
+	232,
+	124,
+	'D major',
+	1039),
+	('2022-07-08',
+	'LOOSE CHANGE',
+	226,
+	85,
+	'C-sharp minor',
+	1034),
+	('2015-03-16',
+	'The Blacker the Berry',
+	328,
+	88,
+	'B-flat major',
+	1013),
+	('2013-06-18',
+	'Astronaut',
+	129,
+	89,
+	'C-sharp major',
+	1035);
+go
+
+
+SELECT *
+FROM label;
+
+SELECT *
+FROM album;
+
+SELECT *
+FROM song;
