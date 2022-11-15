@@ -207,7 +207,7 @@ go
 -- ###### START OF DATA INSERTION ######
 -- Start of Jenna's code
 
-go
+
 INSERT INTO label (
 	LabelName,
 	DateFounded)
@@ -752,9 +752,8 @@ VALUES
 	1035);
 go
 
--- ###### START OF DATA INSERTION ######
+
 -- Start of Theresa's code
-go
 insert into artist(
 	ArtistName, ArtistRegion, LabelID
 )
@@ -762,8 +761,32 @@ VALUES
 	('Dave Brubeck', 'Concord, California', 1015),
 	('Harry Styles', 'Redditch, England', 1015),
 	('Buck Owens', 'Messa, Arizona', 1016),
-   	('Ed Sheeran', 'England', 1015),
-  	('Drake', 'Toronto, Canada', 1018),
+	('Don Rich', 'Olympis, Washington',1016),
+	('Doyle Holly', 'Perkins, Oklahoma', 1016),
+	('Tom Brumley', 'Stella, Missouri', 1016),
+	('Willie Cantu', 'California', 1016),
+	('Doyle Kurtsinger', NULL, 1016),
+	('Jerry Brightman', 'Akron,Ohio', 1016),
+	('Jim Shaw', 'Michigan', 1016),
+	('Jerry Wiggins', 'Oklahoma', 1016),
+	('Jay Maness', 'California', 1016),
+	('Jana Jae', 'Montana', 1016),
+	('Wayne Wilson', 'West Virgina', 1016),
+	('Merle Haggard', 'California', 1016),
+	('Ronnie Jackson', NULL, 1016),
+	('Jay McDonald', NULL, 1016),
+	('Ken Presley',NULL, 1016),
+	('Kenny Pierce', NULL, 1016),
+	('Wayne Stone', 'North Carolina', 1016),
+	('Buck Dupree', 'North Carolina', 1016),
+	('George French', 'Wisconsin', 1016),
+	('Ron Jackson', 'New Jersey', 1016),
+	('Fred Gates', 'Detroit, Michigan', 1016),
+	('David Wulfkuehler', NULL, 1016),
+	('Rick Taylor', NULL, 1016),
+	('Terry Christopherson', 'France', 1016),
+    ('Ed Sheeran', 'England', 1015),
+    ('Drake', 'Toronto, Canada', 1018),
     ('Ali Gatie', 'Aden, Yemen', 1019),
     ('Carrie Underwood', 'Muskogee, Oklahoma', 1021),
     ('Mort Garson', 'California', 1000),
@@ -812,7 +835,7 @@ VALUES
 	('Damario McCullough', 'Flint, Michigan', 1028),
 	('Lucki Camel Jr.', 'Chicago, Illinois',1024),
 	('Marcellus Register', 'Detroit, Michigan', 1024),
-	('Andr� Benjamin', 'Atlanta, Georgia',  1037),
+	('André Benjamin', 'Atlanta, Georgia',  1037),
 	('Hayley Williams', 'Mississippi', 1038),
 	('Taylor York', 'Nashville, Tennessee',1038),
 	('Josh Farro', 'New Jersey', 1038),
@@ -872,10 +895,80 @@ VALUES
 	('Christopher Wood', 'Columbia, Maryland',1034),
 	('Kendrick Lamar', 'Compton, Cali',1013),
 	('Otis Jackson', 'Oxnard, Cal', 1035);
-	go
+
+
+
+insert into genre(
+GenreName, GenreDescription, GenreRegionOrg
+)
+Values
+	('Country', 'Music based in rural American culture.', 'Southern USA'),
+	('Pop', 'Music with mass commercial appeal.', 'United States'),
+	('Jazz', 'Complex music with polyrhythm and improvisation.','United States'),
+	('R&B','Smooth, modern music with soul, funk and pop.','United States'),
+	('Dancehall', 'Inspired by reggae with an emphasis on rhythm.','Jamaica'),
+	('Alt Pop','Pop-inspired indie music.','United States'),
+	('Gangsta Rap', 'Music based in American street gang culture.','United States'),
+	('Soul','Music with r&b and gospel elements.','United States'),
+	('Trap', 'Music with percussive beats and heavy bass.','Southern USA'),
+	('Drum&Bass','Fast, syncopated beats with heavy basslines.', 'UK'),
+	('Hardcore HipHop','Characterized by confrontation and aggression.','USA'),
+	('ConsciousHipHop','Hiphop with lyrics dealing with social issues.','USA'),
+	('Grunge', 'Loud, distorted music with a "sludgy" feel.','USA'),
+	('Heavy metal','Aggressive and intense rock music.', 'USA'),
+	('Hard rock','Heavier and more aggressive rock music.', 'USA'),
+	('Stoner rock', 'Psychedelic and raw rock music.', 'USA'),
+	('Trip Hop', 'Psychedelic fusion of hip hop and electronica.','Europe'),
+	('Hip-Hop','Stylized rhythmic music with rap vocals.', 'New York'),
+	('Folk Pop', 'Musical style that is acoustic based.', 'USA,Eurpoe'),
+	('Electric', 'Music made using electronic instruments.', 'Germany'),
+	('Experimental', 'Music made to push existing boundaries.', 'Eurpoe, USA'),
+	('Ambient', 'Music emphasizing atmosphere and mood.', 'United Kingdom'),
+	('Progressive Pop','Complex musical arrangements within pop music.', 'Europe'),
+	('Psychedelic Pop', 'Music with elements of psychedelic rock and pop.', 'United States'),
+	('Hypnagogic Pop', 'Music made to evoke nostalgia for the 1970s/1980s.', 'United States'),
+	('Folk Rock', 'Acoustic music based in traditional songwriting.', 'USA, Canada, Eurpoe'),
+	('Turntablism', 'Music manipulated and remixed by a DJ.',  'Europe'),
+	('French House', 'French house music.',  'France'),
+	('Electropop', 'Densely layed and compressed synthesizer music.', 'United Kingdom'),
+	('Blues Rock','Fusion of electric blues and rock music.', 'USA, United Kingdom'),
+	('Dance Rock','Disco dance of rock music.', 'United States'),
+	('Alternate Dance','Musical of mixed rock.', 'United States'),
+	('City Pop', 'Contemporary Japanese pop with Western influence.', 'Japan'),
+	('J-Pop','Japanese pop music.', 'Japan'),
+	('Acid Jazz', 'Combination of funk, hip hop, jazz and disco.',  'Europe'),
+	('Blues Rock', 'Fusion of electric blues and rock music.',  'USA, Uniited Kingdom'),
+	('Garage Rock', 'Rock music with an unsophisticated sound.',  'USA'),
+	('Pop Rock', 'Pop music with rock and roll influence',  'USA'),
+	('New Wave','Experimental rock music from the 70s to 90s.', 'Europe'),
+	('Funk', 'Jazz influenced, emphasizing hypnotic groove.', 'USA'),
+	('Rap', 'Music with rhythmically spoken word lyrics.', 'USA');
+
+go
+insert into band(
+BandName, MembersNum, DateFormed, DateDisbanded, LabelID
+)
+Values
+	('C2C','3','1998', NULL ,1003),
+	('Depeche Mode','5','1980', NULL ,1004),
+	('Black Keys','2','2001', NULL ,1008),
+	('Talking Heads','4','1975','2002',1009),
+	('Stone Temple Pilots','6','1989',NULL, 1011),
+	('Soundgarden','7','1984','2018', 1012),
+	('Audioslave', '4','2001', '2007', 1013),
+	('OutKast', '2', '1992','2014', 1029),
+	('Paramore', '3','2004',NULL, 1011),
+	('Slipknot', '9', '1995',NULL, 1030),
+	('N.W.A', '6', '1987','1991', 1031),
+	('Odd Future','11', '2007', NULL,1032),
+	('Earthgang', '2','2008',NULL, 1033),
+	('The Buckaroos', '25', '1965', '1970', 1016);
 
 select *
 from artist;
+
+select *
+from band;
 
 SELECT *
 FROM label;
@@ -885,3 +978,6 @@ FROM album;
 
 SELECT *
 FROM song;
+
+select *
+from genre;
