@@ -1,8 +1,10 @@
+-- Class: ITCS 1170 R1601 2022FA
+-- Database Group #1
 -- Author: Robert Kern, Devendra Ranjan, Jenna Joseph, Theresa Khouri
--- Date: 10/29/2022
--- Desc: Contains the create statements for the MusicLibrary Database 
---		 Including the domain tables: 	Label, Band, Artist, Album, Song, and Genre
---		 and the linking tables: 		Song_Band, Song_Artist, Song_Genre, Song_Album, and Band_Artist
+-- Date: 11/17/2022
+-- Desc: Creates and inserts data into a database tracking information about a library of music.
+-- 	 Tables: LABEL, SONG, ALBUM, ARTIST, BAND, GENRE,
+--		 SONG_ARTIST, SONG_BAND, SONG_ALBUM, SONG_GENRE, BAND_ARTIST
  
 
 use master;
@@ -19,7 +21,7 @@ go
 
 -- ###### START OF DOMAIN TABLES ######
 
---  Devendra's Code:
+--  Start of Devendra's Code:
 
 --Creates the Label Table
 CREATE TABLE LABEL(
@@ -30,13 +32,11 @@ CREATE TABLE LABEL(
 );
 go
 
--- Changed LabelName from CHAR(20) to CHAR(40) (Jenna 11/9/2022)
-
 --Creates the Album Table
 CREATE TABLE ALBUM
 (
 	AlbumID     INT      identity(2000, 1),
-	AlbumLength SMALLINT not null,
+	AlbumLength SMALLINT not null, --in seconds
 	AlbumName   CHAR(35) not null,
 	NumTracks   TINYINT  not null,
 	ReleaseDate Date     not null,
@@ -52,14 +52,12 @@ CREATE TABLE ALBUM
 );
 go
 
--- Changed AlbumName from CHAR(20) to CHAR(35) (Jenna 11/9/2022)
-
 --Creates Table song
 CREATE TABLE SONG(
 	SongID      INT      identity(3000, 1),
 	ReleaseDate DATE     not null,
 	SongTitle       CHAR(35) not null,
-	SongLength      SMALLINT not null,
+	SongLength      SMALLINT not null, --in seconds
 	BPM         SMALLINT,
 	SongKey     CHAR(3),
 	LabelID     INT      not null,
@@ -73,10 +71,6 @@ CREATE TABLE SONG(
 );
 go
 
--- Should the song table be linked with the album table? (Jenna 11/9/2022)
--- Changed Title and Length to SongTitle and SongLength for clarity (Jenna 11/9/2022)
--- Changed SongTitle from Char(15) to Char(35) (Jenna 11/9/2022)
-
 --Creates the Genre table
 CREATE TABLE GENRE(
 	GenreID          INT 		 identity(4000, 1),
@@ -88,7 +82,9 @@ CREATE TABLE GENRE(
 );
 go
 
---  Robert's Code:
+-- End of Devendra's Code
+
+--  Start of Robert's Code:
 
 create table BAND (
     BandID int identity(5000,1),
@@ -118,12 +114,14 @@ create table ARTIST (
 	on delete no action
 );
 go
+
+-- End of Robert's Code
 -- ###### END OF DOMAIN TABLES ######
 
 
 -- ###### START OF LINKING TABLES ######
 
---  Devendra's Code:
+--  Start of Devendra's Code:
 
 --Creates a linking table between SONG and GENRE
 CREATE TABLE SONG_GENRE(
@@ -152,8 +150,10 @@ CREATE TABLE SONG_ALBUM(
 	on delete no action
 );
 go
+-- End of Devendra's Code
 
---  Robert's Code:
+-- Start of Robert's Code:
+
 create table BAND_ARTIST (
     BandID int,
     ArtistID int,
@@ -197,14 +197,12 @@ create table SONG_ARTIST (
 	on delete no action
 );
 go
+-- End of Robert's Code
 -- ###### END OF LINKING TABLES ######
 
--- Author: Jenna Joseph and Theresa Khouri
--- Date: 11/9/2022
--- Desc: Contains the insert statements for the MusicLibrary Database 
 
--- ###### START OF DATA INSERTION ######
--- Start of Jenna's code
+-- ###### START OF DATA INSERTION FOR DOMAIN TABLES ######
+-- Start of Jenna's code:
 
 INSERT INTO label (
 	LabelName, DateFounded)
@@ -252,13 +250,8 @@ VALUES
 	;
 go
 
--- I'm listing length of songs and albums in seconds for now (Jenna 11/9/2022)
 INSERT INTO album (
-	AlbumLength,
-	AlbumName,
-	NumTracks,
-	ReleaseDate,
-	LabelID)
+	AlbumLength, AlbumName, NumTracks, ReleaseDate, LabelID)
 VALUES
 	(1855,'Mother Earth''s Plantasia',10,'1976',1000),
 	(521,'Baby Hotline/Tea Errors',2,'2019-03-21',1001),
@@ -352,7 +345,7 @@ go
 
 -- End of Jenna's code
 
--- Start of Theresa's code
+-- Start of Theresa's code:
 
 insert into artist(
 	ArtistName, ArtistRegion, LabelID
@@ -574,10 +567,11 @@ Values
 go
 
 -- End of Theresa's code
-
--- Start of Jenna's code
+-- ###### END OF DATA INSERTION FOR DOMAIN TABLES ######
 
 -- ###### START OF DATA INSERTION FOR LINKING TABLES ######
+
+-- Start of Jenna's code:
 
 INSERT INTO song_genre (
 	GenreID, SongID)
@@ -877,8 +871,10 @@ VALUES
 	(3039, 6139);
 go
 -- End of Jenna's code
--- ###### END OF DATA INSERTION ######
+-- ###### END OF DATA INSERTION FOR LINKING TABLES ######
 
+-- Select statements for testing purposes:
+/*
 SELECT *
 FROM label;
 
@@ -916,3 +912,4 @@ go
 SELECT *
 FROM song_artist;
 go
+*/
