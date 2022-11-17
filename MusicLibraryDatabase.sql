@@ -447,7 +447,7 @@ VALUES
 	('Sid Wilson', 'Des Moines, Iowa', 1030),
 	('Paul Gray', 'California', 1030),
 	('Jim Root', 'Las Vegas, Nevada', 1030),
-	('Chris Fehn', ' Des Moines, Iowa', 1030),
+	('Chris Fehn', 'Des Moines, Iowa', 1030),
 	('Craig Jones', 'Des Moines, Iowa', 1030),
 	('Jay weinberg', 'New Jersey', 1030),
 	('Alessandro Venturell', 'United Kingdom', 1030),
@@ -484,7 +484,7 @@ VALUES
 	('Brandun DeShay', 'Chicago, Illinois', 1032),
 	('Johnny Venus', 'Atlanta, Georgia',1033),
 	('Eian Parker','Atlanta, Georgia', 1033),
-	('Durk Banks (Lil Durk)', 'Chicago,Illinois', 1033), /*Lil Durk*/
+	('Durk Banks (Lil Durk)', 'Chicago, Illinois', 1033), /*Lil Durk*/
 	('Christopher Wood (Brent Faiyaz)', 'Columbia, Maryland',1034), /*Brent Faiyaz*/
 	('Kendrick Lamar', 'Compton, California',1013),
 	('Otis Jackson', 'Oxnard, California', 1035),
