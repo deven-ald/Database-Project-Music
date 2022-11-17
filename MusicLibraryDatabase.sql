@@ -423,7 +423,7 @@ VALUES
 	('Tyler Gregory Okonma (Tyler The Creator)', 'California', 1015), /*Tyler The Creator*/
 	('Dion Marquise Hayes', 'Detroit, Michigan', 1015),
 	('Erica Abi Wright (Erykah Badu)', 'Dallas, Texas', 1025), /*Erykah Badu*/
-	('Marvin Gaye', 'Washignton, DC', 1026),
+	('Marvin Gaye', 'Washington, D.C.', 1026),
 	('Rick James', 'Buffalo, New York', 1026),
 	('Damario McCullough (Rio Da Yung OG)', 'Flint, Michigan', 1028), /*Rio Da Yung OG*/
 	('Lucki Camel Jr.', 'Chicago, Illinois',1024), /*Lucki*/
@@ -437,8 +437,8 @@ VALUES
 	('Aaron Gillespie', 'Clearwater, Florida', 1038),
 	('Hunter Lamb', 'Nashville, Tennessee', 1038),
 	('Jason Bynum', 'Nasville, Tennessee', 1038),
-	('John Hembree', 'Orlando Florida', 1038),
-	('Josh Freese', 'Orlando Florida', 1038),
+	('John Hembree', 'Orlando, Florida', 1038),
+	('Josh Freese', 'Orlando, Florida', 1038),
 	('John Howard', 'Pennsylvania', 1038),
 	('Corey Taylor', 'Des Moines, Iowa', 1030),
 	('Joey Jordison','Des Moines, Iowa', 1030),
