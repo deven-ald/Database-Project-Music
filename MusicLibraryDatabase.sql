@@ -413,7 +413,7 @@ VALUES
 	('Tim Commerford', 'Irvine, California', 1013),
 	('Brad Wilk', 'Portland, Oregon', 1013),
 	('Scott Weiland', 'San Jose, California', 1011),
-	('Chester Bennington', 'Phoenix Arizona', 1011),
+	('Chester Bennington', 'Phoenix, Arizona', 1011),
 	('Jeff Gutt', 'Michigan', 1011),
 	('Dean DeLeo' , 'Newark, New Jersey',1011),
 	('Robert Deleo', 'New Jersey',1011),
