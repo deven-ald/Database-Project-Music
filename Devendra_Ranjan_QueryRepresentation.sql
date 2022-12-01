@@ -30,8 +30,7 @@ album these are based on the length.
 
 select Albumname
 	 , albumlength / 60 [Minutes] 
-     , albumlength % 60 [Seconds]
-	 , albumlength
+         , albumlength % 60 [Seconds]
 	 , 'EP'
 --Note I am considering singles that are realesed as if they were albums EPs
 from album
@@ -39,8 +38,7 @@ where albumlength < 1800
 union all
 select Albumname
 	 , albumlength / 60  
-     , albumlength % 60 
-	 , albumlength
+         , albumlength % 60 
 	 , 'LP'
 from album
 where albumlength >= 1800;
