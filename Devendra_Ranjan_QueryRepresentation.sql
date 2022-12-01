@@ -15,6 +15,9 @@ from artist a left join BAND_ARTIST ba
        on a.artistid = ba.artistid
 left join band b
        on b.bandid = ba.bandid
+--where b.labelid = a.labelid
+where artistregion in ('Detroit, Michigan', 'Compton, California', 'Chicago, Illinois', 'Los Angeles, California')
+order by  bandname desc, artistname, artistregion
 
 /*
 The general consideration for an EP is 30 minutes or less, therefore this database will interact with anything 
