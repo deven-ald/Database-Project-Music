@@ -7,17 +7,14 @@ database are synonymous with groups and duos any collaborative artistic effort w
 */
 
 --Uses a full outer join a where clause, a multitable join and an order by statement
-
+--The following was edited and assisted by Robert Kern.
 select artistname [Artist Name]
-	,  bandname [Band Name]
-	,  artistregion [Artist Region]
-from band_artist ba full join artist a
-	on ba.artistid = a.artistid
-full join band b
-	on ba.bandid = b.bandid
---where b.labelid = a.labelid
-where artistregion in ('Detroit, Michigan', 'Compton, California', 'Chicago, Illinois', 'Los Angeles, California')
-order by  bandname desc, artistname, artistregion;
+       ,  bandname [Band Name]
+       ,  artistregion [Artist Region]
+from artist a left join BAND_ARTIST ba
+       on a.artistid = ba.artistid
+left join band b
+       on b.bandid = ba.bandid
 
 /*
 The general consideration for an EP is 30 minutes or less, therefore this database will interact with anything 
