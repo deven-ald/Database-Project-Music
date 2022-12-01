@@ -43,4 +43,4 @@ select Albumname
 	 , albumlength
 	 , 'LP'
 from album
-where albumlength > 1800;
+where albumlength >= 1800;
