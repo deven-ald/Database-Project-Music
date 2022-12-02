@@ -1,0 +1,68 @@
+/* 
+AUTHOR: Jenna Joseph 12/1/2022
+*/
+use MusicLibrary;
+go
+/*A query that returns how many albums a record label has associated with it
+	includes name of record label, date founded, and number of albums
+	ordered by least to most albums
+This query includes a two-table join and
+	a group by statement*/
+select labelname as [Record Label],
+	year(datefounded) [Date Founded],
+	count(albumid) as [# of Albums]
+from label l join album a
+	on l.labelid = a.labelid
+group by labelname, datefounded
+order by [# of Albums] desc;
+go
+/*A query that returns songs that have more than one genre associated
+	include song name, artist name, and genres associated
+This query includes a multi-table join, a set operator (union),
+	a group by, a having statement and an order by statement*/
+select songtitle as [Song Name],
+	artistname [Artist Name],
+	string_agg(trim(genrename), '/') as [Genres]
+from song s join song_artist sa
+	on s.songid = sa.songid
+	join artist a
+	on sa.artistid = a.artistid
+	join song_genre sg
+	on s.songid = sg.songid
+	join genre g
+	on sg.genreid = g.genreid
+group by songtitle, artistname
+having string_agg(trim(genrename), '/') like '%/%'
+union
+select songtitle as [Song Name],
+	bandname as [Artist Name],
+	string_agg(trim(genrename), '/') as [Genres]
+from song s join song_band sb
+	on s.songid = sb.songid
+	join band b
+	on sb.bandid = b.bandid
+	join song_genre sg
+	on s.songid = sg.songid
+	join genre g
+	on sg.genreid = g.genreid
+group by songtitle, bandname
+having string_agg(trim(genrename), '/') like '%/%'
+order by [Song Name];
+go
+/*A query that determines how many years a band has been active
+	include band name, year founded, years active, and whether the band is currently active
+This query includes a where clause, a set operator, and a group by statement*/
+select bandname as [Band Name],
+	year(dateformed) as [Year Formed],
+	datediff(year, dateformed, datedisbanded) as [Years Active],
+	'not active' as [Current Status]
+from band
+where datedisbanded is not null
+union all
+select bandname,
+	year(dateformed),
+	datediff(year, dateformed, GETDATE()),
+	'active'
+from band
+where datedisbanded is null
+order by [Current Status];
