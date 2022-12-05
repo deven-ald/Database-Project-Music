@@ -1,8 +1,8 @@
 -- Class: ITCS 1170 R1601 2022FA
 -- Database Group #1
 -- Author: Robert Kern, Devendra Ranjan, Jenna Joseph, Theresa Khouri
--- Date: 11/17/2022
--- Desc: Creates and inserts data into a database tracking information about a library of music.
+-- Date: 12/01/2022
+-- Desc: Contains Create statements, Insert statements, and Queries for a database tracking information about a library of music.
 -- 	 Tables: LABEL, SONG, ALBUM, ARTIST, BAND, GENRE,
 --		 SONG_ARTIST, SONG_BAND, SONG_ALBUM, SONG_GENRE, BAND_ARTIST
  
@@ -873,43 +873,177 @@ go
 -- End of Jenna's code
 -- ###### END OF DATA INSERTION FOR LINKING TABLES ######
 
--- Select statements for testing purposes:
+ 
+--####### START OF QUERIES ########
+
+ -- Robert's Queries:
+
+--Query that uses a subquery to return song names, keys, bpm, and genres for songs that are slower than the average bpm
+select songtitle as [Song Title]
+       , songkey as [Key]
+       , bpm
+       , string_agg(trim(genrename), '/') as [Genre(s)] --Note: this string aggregate function behaves strangely when run in the codio sandbox
+from song s join SONG_GENRE sg
+       on s.songid = sg.songid
+       join genre g
+       on g.genreid = sg.genreid
+where bpm <
+       (select avg(bpm)
+       from song)
+group by SongTitle, songkey, bpm
+order by songkey asc, bpm asc;
+ 
+--Query that uses a set operator to return songs by pop bands and artists
+select songtitle as [Song Title]
+       , artistname as [Artist]
+       , songkey as [Key]
+       , bpm
+       , string_agg(trim(genrename), '/') as [Genre(s)]
+from song s join SONG_GENRE sg
+       on s.songid = sg.songid
+       join genre g
+       on g.genreid = sg.genreid
+       join SONG_ARTIST sa on s.songid = sa.songid
+       join artist a on a.artistid = sa.artistid
+group by SongTitle, ArtistName,songkey, bpm
+having string_agg(trim(genrename), '/') like '%pop%'
+union
+select songtitle
+       , bandname
+       , songkey
+       , bpm
+       , string_agg(trim(genrename), '/') as [Genre(s)]
+from song s join SONG_GENRE sg
+       on s.songid = sg.songid
+       join genre g
+       on g.genreid = sg.genreid
+       join SONG_BAND sb on s.songid = sb.songid
+       join BAND b on b.bandid = sb.bandid
+group by SongTitle, BandName, songkey, bpm
+having string_agg(trim(genrename), '/') like '%pop%'
+order by songkey asc, bpm asc;
+
+--End of Robert's Queries
+
+
+--Devendra's Queries:
 /*
-SELECT *
-FROM label;
-
-SELECT *
-FROM album;
-
-SELECT *
-FROM song;
-
-SELECT *
-FROM song_album;
-
-select*
-from artist;
-
-select*
-from genre;
-
-select*
-from band;
-go
-
-SELECT *
-FROM song_genre;
-go
-
-SELECT *
-FROM band_artist;
-go
-
-SELECT *
-FROM song_band;
-go
-
-SELECT *
-FROM song_artist;
-go
+AUTHOR: Devendra Ranjan 11/30/2022
+Searches for all artists, and their bands (if they have one) that have an artist region inside of one of the following cities
+Detroit, Michigan, Compton, California, Chicago, Illinois, or Los Angeles, CaliforniaThe reason this is an outerjoin is because
+I want to show all of the artists that live in these places, but also show the bands they're in if they are in one. Bands in this
+database are synonymous with groups and duos any collaborative artistic effort with more than one affiliate can be classified as a band.
 */
+
+--Uses an outer join a where clause, a multitable join and an order by statement
+--The following was edited and assisted by Robert Kern.
+select artistname [Artist Name]
+       ,  bandname [Band Name]
+       ,  artistregion [Artist Region]
+from artist a left join BAND_ARTIST ba
+       on a.artistid = ba.artistid
+left join band b
+       on b.bandid = ba.bandid
+--where b.labelid = a.labelid
+where artistregion in ('Detroit, Michigan', 'Compton, California', 'Chicago, Illinois', 'Los Angeles, California')
+order by  bandname desc, artistname, artistregion;
+
+/*
+The general consideration for an EP is 30 minutes or less, therefore this database will interact with anything 
+under 1800 seconds as if it were an EP if there was an albumtype attribute (which we didn't consider at the point
+of theorizing our DB). Since we didn't, this dynamic query using a set operator will differentiate what kind of 
+album these are based on the length.
+*/
+
+--Uses set operator union all, and where statement
+
+select Albumname
+	 , albumlength / 60 [Minutes] 
+         , albumlength % 60 [Seconds]
+	 , 'EP'
+--Note I am considering singles that are realesed as if they were albums EPs
+from album
+where albumlength < 1800
+union all
+select Albumname
+	 , albumlength / 60  
+         , albumlength % 60 
+	 , 'LP'
+from album
+where albumlength >= 1800;
+
+--End of Devendra's Queries
+
+
+--Jenna's Queries:
+/* 
+AUTHOR: Jenna Joseph 12/1/2022
+*/
+use MusicLibrary;
+go
+/*A query that returns how many albums a record label has associated with it
+	includes name of record label, date founded, and number of albums
+	ordered by least to most albums
+This query includes a two-table join and
+	a group by statement*/
+select labelname as [Record Label],
+	year(datefounded) [Date Founded],
+	count(albumid) as [# of Albums]
+from label l join album a
+	on l.labelid = a.labelid
+group by labelname, datefounded
+order by [# of Albums] desc;
+go
+/*A query that returns songs that have more than one genre associated
+	include song name, artist name, and genres associated
+This query includes a multi-table join, a set operator (union),
+	a group by, a having statement and an order by statement*/
+select songtitle as [Song Name],
+	artistname [Artist Name],
+	string_agg(trim(genrename), '/') as [Genres]
+from song s join song_artist sa
+	on s.songid = sa.songid
+	join artist a
+	on sa.artistid = a.artistid
+	join song_genre sg
+	on s.songid = sg.songid
+	join genre g
+	on sg.genreid = g.genreid
+group by songtitle, artistname
+having string_agg(trim(genrename), '/') like '%/%'
+union
+select songtitle as [Song Name],
+	bandname as [Artist Name],
+	string_agg(trim(genrename), '/') as [Genres]
+from song s join song_band sb
+	on s.songid = sb.songid
+	join band b
+	on sb.bandid = b.bandid
+	join song_genre sg
+	on s.songid = sg.songid
+	join genre g
+	on sg.genreid = g.genreid
+group by songtitle, bandname
+having string_agg(trim(genrename), '/') like '%/%'
+order by [Song Name];
+go
+/*A query that determines how many years a band has been active
+	include band name, year founded, years active, and whether the band is currently active
+This query includes a where clause, a set operator, and a group by statement*/
+select bandname as [Band Name],
+	year(dateformed) as [Year Formed],
+	datediff(year, dateformed, datedisbanded) as [Years Active],
+	'not active' as [Current Status]
+from band
+where datedisbanded is not null
+union all
+select bandname,
+	year(dateformed),
+	datediff(year, dateformed, GETDATE()),
+	'active'
+from band
+where datedisbanded is null
+order by [Current Status];
+--End of Jenna's Queries
+
+--####### END OF QUERIES ########
