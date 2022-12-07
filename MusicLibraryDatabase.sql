@@ -979,8 +979,7 @@ where albumlength >= 1800;
 /* 
 AUTHOR: Jenna Joseph 12/1/2022
 */
-use MusicLibrary;
-go
+
 /*A query that returns how many albums a record label has associated with it
 	includes name of record label, date founded, and number of albums
 	ordered by least to most albums
@@ -1046,4 +1045,49 @@ where datedisbanded is null
 order by [Current Status];
 --End of Jenna's Queries
 
+
+------START OF THERESA'S QUERIES------
+--This query will show the artists that have more than one album and also show the name of those artists with the total num of albums.
+select ar.artistid AS [Artist ID],
+		ar.artistname AS [Artist Name],
+		count(*)
+		Numberofalbum
+	from album a join song_album sa on a.albumid = sa.albumid
+    join song s on sa.songid = s.songid
+	join song_artist sar on s.songid = sar.songid
+    join artist ar on sar.artistid = ar.artistid
+	group by ar.ArtistID, ar.ArtistName
+	having count(*) > = 1;
+
+
+
+----QUERY BY THERESA AND JENNA ------
+-- this query shows which artists and bands released an album during the decades of the 1990's and the 2000's? 
+
+select ar.artistname as [Artist Name],
+       al.albumname as [Album Name],
+       year(al.releasedate) as [Album Year]
+from artist ar join song_artist sar
+       on ar.artistid = sar.artistid
+       join song_album sal
+       on sar.songid = sal.songid
+       join album al
+       on sal.albumid = al.albumid
+group by ar.artistname, al.albumname, year(al.releasedate)
+having year(al.ReleaseDate) >= 1990 and year(al.ReleaseDate) <= 2022
+UNION
+select ba.bandname,
+       al.albumname,
+       year(al.releasedate)
+from band ba join song_band sba
+       on ba.bandid = sba.bandid
+       join song_album sal
+       on sba.songid = sal.songid
+       join album al
+       on sal.albumid = al.albumid
+group by ba.bandname, al.albumname, year(al.releasedate)
+having year(al.ReleaseDate) >= 1990 and year(al.ReleaseDate) <= 2022
+order by year(al.ReleaseDate);
+	
+	
 --####### END OF QUERIES ########
